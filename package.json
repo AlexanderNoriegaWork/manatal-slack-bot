@@ -1,0 +1,14 @@
+{
+  "name": "manatal-slack-bot",
+  "repository": "https://github.com/AlexanderNoriegaWork/manatal-slack-bot.git",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@vercel/node": "^5.0.0",
+    "axios": "1.7.9",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2"
+  }
+}
