@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { handleChatMessage } from "../lib/manatal-slack-integration";
+import { run } from "../lib/manatal-slack-integration";
 
 /*
 const logUnknownError = (msg: string, e: unknown) => {
