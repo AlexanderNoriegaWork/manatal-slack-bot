@@ -10,6 +10,7 @@ const logUnknownError = (msg: string, e: unknown) => {
 const { SLACK_CHANNEL_ID } = process.env;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // random comment
   await run();
   res
     .status(200)
