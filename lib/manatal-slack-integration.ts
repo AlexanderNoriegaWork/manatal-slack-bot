@@ -3,4 +3,6 @@ import { postToSlack } from "./slack";
 
 const LOG_CTX = "[lib/manatal-slack-integration]" as const;
 
-export const run = async () => {};
+export const run = async () => {
+  await postToSlack();
+};
