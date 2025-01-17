@@ -15,6 +15,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res
     .status(200)
     .send(
-      `Not implemented: Send message to slack channel: ${SLACK_CHANNEL_ID}`,
+      `NOT implemented: Send message to slack channel: ${SLACK_CHANNEL_ID}`,
     );
 }
