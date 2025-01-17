@@ -7,6 +7,12 @@ const logUnknownError = (msg: string, e: unknown) => {
 };
 */
 
+const { SLACK_CHANNEL_ID } = process.env;
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  res.status(200).send(challenge);
+  res
+    .status(200)
+    .send(
+      `Not implemented: Send message to slack channel: ${SLACK_CHANNEL_ID}`,
+    );
 }
