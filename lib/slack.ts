@@ -6,10 +6,9 @@ const slackClient = new WebClient(SLACK_BOT_TOKEN);
 
 const LOG_CTX = "[lib/slack]";
 
-export const postToSlack = async (): Promise<void> => {
+export const postToSlack = async (text: string): Promise<void> => {
   console.log(`${LOG_CTX} Try to post message to slack`);
   try {
-    const text = "Hello (cron-triggered)!";
     await slackClient.chat.postMessage({ channel: SLACK_CHANNEL_ID, text });
     console.log(`${LOG_CTX} Message posted successfully`);
   } catch (e: any) {
