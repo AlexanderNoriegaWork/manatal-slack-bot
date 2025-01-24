@@ -21,7 +21,9 @@ const sqlConfig: sql.config = {
   },
 };
 
-export const getRecruitmentInfo = async (): Promise<string> => {
+export const getRecruitmentInfo = async (): Promise<
+  sql.IRecordSet<Job.Match>
+> => {
   // throw new Error("NOT IMPLEMENTED");
   try {
     console.log(`${LOG_CTX} Try connecting to Azure SQL`);
@@ -30,10 +32,10 @@ export const getRecruitmentInfo = async (): Promise<string> => {
     console.log(`${LOG_CTX} Try querying Azure SQL`);
     const result = await pool
       .request()
-      .query(`SELECT * FROM ${AZURE_SQL_JOBS_VIEW}`);
-    const recruitmentInfo = JSON.stringify(result.recordset, null, 2);
+      .query<Job.Match>(`SELECT * FROM ${AZURE_SQL_JOBS_VIEW}`);
+    const match = result.recordset;
     pool.close();
-    return recruitmentInfo;
+    return match;
   } catch (e) {
     throw Error(
       `${LOG_CTX} could not obtain recruitement info: ${JSON.stringify(e)}`,
