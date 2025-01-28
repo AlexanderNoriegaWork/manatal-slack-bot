@@ -13,6 +13,8 @@ declare namespace Job {
   type Candidate = string;
   type StageName = string;
   type DateString = string;
+  type JIRAKey = string;
+  type BusinessUnit = string;
   type Match = {
     studio: Studio;
     position: Position;
@@ -20,6 +22,8 @@ declare namespace Job {
     stage_name: StageName;
     created_at: DateString;
     updated_at: DateString;
+    jira_key: JIRAKey | null;
+    business_unit: BusinessUnit | null;
   };
   type Branded<T, B> = T & { __brand: B };
   type ValidStudio = Branded<Studio, "ValidStudio">;

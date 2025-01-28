@@ -5,5 +5,6 @@ const LOG_CTX = "[lib/manatal-slack-integration]" as const;
 
 export const run = async () => {
   const r = await getRecruitmentInfo();
-  await postToSlack(r);
+  const formatted = r.map((job) => `${job.candidate} ${job.stage_name}`);
+  await postToSlack(JSON.stringify(formatted));
 };
