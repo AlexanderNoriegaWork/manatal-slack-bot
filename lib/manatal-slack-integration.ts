@@ -17,10 +17,11 @@ export const run = async () => {
   const message: string = Object.keys(dict).reduce(
     (acc: string, bu: Job.BusinessUnit | "all") => {
       const formatted = dict[bu].map(formatMatch).join("\n\n");
-      return acc + `*${bu.toUpperCase()}*` + formatted;
+      return acc + `*${bu.toUpperCase()}*\n` + formatted;
     },
     "",
   );
+  console.log(`${LOG_CTX} Found these BUs: ${Object.keys(dict)}`);
   // const formatted = r.map(formatMatch).join("\n\n");
   await postToSlack(message);
 };
