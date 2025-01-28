@@ -10,5 +10,5 @@ const formatMatch = (job: Job.Match): string => {
 export const run = async () => {
   const r = await getRecruitmentInfo();
   const formatted = r.map(formatMatch).join("\n\n");
-  await postToSlack(JSON.stringify(formatted));
+  await postToSlack(formatted);
 };
