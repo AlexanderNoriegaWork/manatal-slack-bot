@@ -6,7 +6,7 @@ const LOG_CTX = "[lib/manatal-slack-integration]" as const;
 const formatMatch = (job: Job.Match): string => {
   const bu = job.business_unit;
   const stage: Job.StageName = job.stage_name;
-  const stageIcon = stage === "Hired" ? ":white_check_mark" : "";
+  const stageIcon = stage === "Hired" ? ":white_check_mark:" : "";
   return `${true ? `(${bu}) ` : ""}*${job.position}*\n${job.candidate} - ${stage} ${stageIcon}`;
 };
 
