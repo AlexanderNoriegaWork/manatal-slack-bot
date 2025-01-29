@@ -2,29 +2,47 @@ import { getRecruitmentInfo } from "./manatal";
 import { postToSlack } from "./slack";
 
 const LOG_CTX = "[lib/manatal-slack-integration]" as const;
+const BUSINESS_UNITS: Job.BusinessUnit[] = [
+  "ALL",
+  "BU 1",
+  "BU 2",
+  "BU 3",
+  "BU 4",
+  "BU 5",
+] as const;
 
 const formatMatch = (job: Job.Match): string => {
   const bu = job.business_unit;
   const stage: Job.StageName = job.stage_name;
   const stageIcon = stage === "Hired" ? ":white_check_mark:" : "";
-  return `${true ? `(${bu}) ` : ""}*${job.position}*\n${job.candidate} - ${stage} ${stageIcon}`;
+  return `(${bu}) *${job.position}*\n${job.candidate} - ${stage} ${stageIcon}`;
 };
+
+const rand = (n: number) => Math.floor(Math.random() * n);
+
+const keys = Object.keys as <T>(o: T) => Extract<keyof T, string>[];
 
 export const run = async () => {
   const r = await getRecruitmentInfo();
-  const dict: Record<Job.BusinessUnit | "all", Job.Match[]> = {};
-  r.forEach((job) => {
-    const bu = job.business_unit || "all";
+  const rWithBU = r.map((job) => ({
+    ...job,
+    business_unit: BUSINESS_UNITS[rand(BUSINESS_UNITS.length)],
+  }));
+  const dict: Partial<Record<Job.BusinessUnit, Job.Match[]>> = {};
+  rWithBU.forEach((job) => {
+    const bu = job.business_unit;
     dict[bu] = dict[bu] !== undefined ? dict[bu].concat([job]) : [job];
   });
-  const message: string = Object.keys(dict).reduce(
-    (acc: string, bu: Job.BusinessUnit | "all") => {
-      const formatted = dict[bu].map(formatMatch).join("\n\n");
+  const bus = keys(dict);
+  const message: string = bus.reduce((acc: string, bu: Job.BusinessUnit) => {
+    const jobs = dict[bu];
+    if (!jobs) {
+      return acc;
+    } else {
+      const formatted = jobs.map(formatMatch).join("\n\n");
       return acc + `*${bu.toUpperCase()}*\n` + formatted;
-    },
-    "",
-  );
+    }
+  }, "");
   console.log(`${LOG_CTX} Found these BUs: ${Object.keys(dict)}`);
-  // const formatted = r.map(formatMatch).join("\n\n");
   await postToSlack(message);
 };

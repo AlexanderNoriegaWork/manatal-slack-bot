@@ -19,7 +19,18 @@ declare namespace Job {
     | "English Interview";
   type DateString = string;
   type JIRAKey = string;
-  type BusinessUnit = string;
+  type BusinessUnit =
+    | "ALL"
+    | "BU 1"
+    | "BU 2"
+    | "BU 3"
+    | "BU 4"
+    | "BU 5"
+    | "BU 6"
+    | "BU 7"
+    | "BU 8"
+    | "BU 9"
+    | "BU 10";
   type Match = {
     studio: Studio;
     position: Position;
