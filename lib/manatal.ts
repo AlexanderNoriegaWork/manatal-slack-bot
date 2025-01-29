@@ -8,6 +8,7 @@ const {
   AZURE_SQL_PASSWORD,
   AZURE_SQL_USERNAME,
   AZURE_SQL_JOBS_VIEW,
+  AZURE_SQL_START_DATE,
 } = process.env;
 
 const sqlConfig: sql.config = {
@@ -30,9 +31,13 @@ export const getRecruitmentInfo = async (): Promise<
     const pool = await sql.connect(sqlConfig);
 
     console.log(`${LOG_CTX} Try querying Azure SQL`);
+    const startDate = AZURE_SQL_START_DATE || "2025-01-01 00:00:00.000000";
     const result = await pool
       .request()
-      .query<Job.Match>(`SELECT * FROM ${AZURE_SQL_JOBS_VIEW}`);
+      .input("start_date", sql.DateTime2, startDate)
+      .query<Job.Match>(
+        `SELECT * FROM ${AZURE_SQL_JOBS_VIEW} WHERE created_at > @start_date`,
+      );
     const match = result.recordset;
     pool.close();
     return match;
