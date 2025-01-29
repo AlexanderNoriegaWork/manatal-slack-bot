@@ -28,14 +28,15 @@ export const run = async () => {
     ...job,
     business_unit: BUSINESS_UNITS[rand(BUSINESS_UNITS.length)],
   }));
-  const dict: Partial<Record<Job.BusinessUnit, Job.Match[]>> = {};
+  const jobsByBU: Partial<Record<Job.BusinessUnit, Job.Match[]>> = {};
   rWithBU.forEach((job) => {
     const bu = job.business_unit;
-    dict[bu] = dict[bu] !== undefined ? dict[bu].concat([job]) : [job];
+    jobsByBU[bu] =
+      jobsByBU[bu] !== undefined ? jobsByBU[bu].concat([job]) : [job];
   });
-  const bus = keys(dict);
+  const bus = keys(jobsByBU);
   const message: string = bus.reduce((acc: string, bu: Job.BusinessUnit) => {
-    const jobs = dict[bu];
+    const jobs = jobsByBU[bu];
     if (!jobs) {
       return acc;
     } else {
@@ -43,6 +44,6 @@ export const run = async () => {
       return acc + `*${bu.toUpperCase()}*\n` + formatted;
     }
   }, "");
-  console.log(`${LOG_CTX} Found these BUs: ${Object.keys(dict)}`);
+  console.log(`${LOG_CTX} Found these BUs: ${Object.keys(jobsByBU)}`);
   await postToSlack(message);
 };
