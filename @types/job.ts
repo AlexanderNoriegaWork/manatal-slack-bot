@@ -11,7 +11,12 @@ declare namespace Job {
     | "Administration and Finance Department";
   type Position = string;
   type Candidate = string;
-  type StageName = string;
+  type StageName =
+    | "Hired"
+    | "HR Interview"
+    | "Technical Interview"
+    | "Applied"
+    | "English Interview";
   type DateString = string;
   type JIRAKey = string;
   type BusinessUnit = string;
