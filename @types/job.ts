@@ -20,7 +20,6 @@ declare namespace Job {
   type DateString = string;
   type JIRAKey = string;
   type BusinessUnit =
-    | "ALL"
     | "BU 1"
     | "BU 2"
     | "BU 3"

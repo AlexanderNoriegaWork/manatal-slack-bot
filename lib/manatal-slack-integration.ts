@@ -3,15 +3,18 @@ import { postToSlack } from "./slack";
 
 const LOG_CTX = "[lib/manatal-slack-integration]" as const;
 const BUSINESS_UNITS: Job.BusinessUnit[] = [
-  "ALL",
   "BU 1",
   "BU 2",
   "BU 3",
   "BU 4",
   "BU 5",
+  "BU 6",
+  "BU 7",
+  "BU 8",
+  "BU 9",
 ] as const;
 
-const formatMatch = (job: Job.Match): string => {
+const formatMatchWithCandidateInfo = (job: Job.Match): string => {
   const bu = job.business_unit;
   const stage: Job.StageName = job.stage_name;
   const stageIcon = stage === "Hired" ? ":white_check_mark:" : "";
