@@ -22,10 +22,10 @@ const rand = (n: number) => Math.floor(Math.random() * n);
 
 const keys = Object.keys as <T>(o: T) => Extract<keyof T, string>[];
 
-type JobsByBU = Partial<Record<Job.BusinessUnit, Job.Match[]>>;
+type MatchesByBU = Partial<Record<Job.BusinessUnit, Job.Match[]>>;
 
-const groupedByBU = (jobMatches: Job.MatchWithBU[]): JobsByBU => {
-  const matchesByBU: JobsByBU = {};
+const groupedByBU = (jobMatches: Job.MatchWithBU[]): MatchesByBU => {
+  const matchesByBU: MatchesByBU = {};
   jobMatches.forEach((job) => {
     const bu = job.business_unit;
     matchesByBU[bu] =
@@ -34,15 +34,32 @@ const groupedByBU = (jobMatches: Job.MatchWithBU[]): JobsByBU => {
   return matchesByBU;
 };
 
+type MatchesByStage = Partial<Record<Job.StageName, Job.Match[]>>;
+
+const groupedByStage = (jobMatches: Job.MatchWithBU[]): MatchesByStage => {
+  const matchesByStage: MatchesByStage = {};
+  jobMatches.forEach((job) => {
+    const stage = job.stage_name;
+    matchesByStage[stage] =
+      matchesByStage[stage] !== undefined
+        ? matchesByStage[stage].concat([job])
+        : [job];
+  });
+  return matchesByStage;
+};
+
 export const run = async () => {
   const matches = await getAllMatches();
   const matchesWithBU = matches.map((job) => ({
     ...job,
     business_unit: BUSINESS_UNITS[rand(BUSINESS_UNITS.length)],
   }));
-  const matchesByBU: JobsByBU = groupedByBU(matchesWithBU);
-  const bus = keys(matchesByBU);
-  const message: string = bus.reduce((acc: string, bu: Job.BusinessUnit) => {
+  const matchesByBU: MatchesByBU = groupedByBU(matchesWithBU);
+  // TODO: Use buList to send to each BU slack channel.
+  // TODO: Send the sum of matches per stage to each channel,
+  // ie. as we won't be needing the individual candidate info.
+  const buList = keys(matchesByBU);
+  const message: string = buList.reduce((acc: string, bu: Job.BusinessUnit) => {
     const matches = matchesByBU[bu];
     if (!matches) {
       return acc;
