@@ -1,7 +1,7 @@
 declare namespace NodeJS {
   interface ProcessEnv {
     SLACK_BOT_TOKEN: string;
-    SLACK_CHANNEL_ID: string;
+    SLACK_CHANNELS: string;
     AZURE_SQL_HOST: string;
     AZURE_SQL_DATABASE: string;
     AZURE_SQL_USERNAME: string;
