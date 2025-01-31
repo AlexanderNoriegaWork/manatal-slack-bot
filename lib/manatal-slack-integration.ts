@@ -108,6 +108,8 @@ const dispatchMessages = async (
   );
 };
 
+const parseJSON = (x: string): unknown => JSON.parse(x);
+
 export const run = async () => {
   const matches = await getAllMatches();
   const matchesWithBU = matches.map((job) => ({
@@ -117,7 +119,7 @@ export const run = async () => {
   const matchesByBU: MatchesByBU = groupedByBU(matchesWithBU);
   const messagesGroupedByBU = messagesByBU(matchesByBU);
   try {
-    const slackChannelsConfig = JSON.parse(SLACK_CHANNELS);
+    const slackChannelsConfig: unknown = parseJSON(SLACK_CHANNELS);
     if (isValidSlackChannelConfig(slackChannelsConfig)) {
       dispatchMessages(messagesGroupedByBU, slackChannelsConfig);
     } else {
