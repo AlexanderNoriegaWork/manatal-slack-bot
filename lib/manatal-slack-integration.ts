@@ -48,6 +48,20 @@ const groupedByStage = (jobMatches: Job.MatchWithBU[]): MatchesByStage => {
   return matchesByStage;
 };
 
+type SummedByStage = Record<Job.StageName, number>;
+
+const summedByStage = (xs: Job.Match[]): Partial<SummedByStage> => {
+  const byStage: Partial<SummedByStage> = {};
+  return xs.reduce((acc: Partial<SummedByStage>, match: Job.Match) => {
+    const stage = match.stage_name;
+    const currentCount = acc[stage] || 0;
+    const newCount = currentCount + 1;
+    return { ...acc, [stage]: newCount };
+  }, byStage);
+};
+
+type MessagesByBU = Partial<Record<Job.BusinessUnit, Partial<SummedByStage>>>;
+
 export const run = async () => {
   const matches = await getAllMatches();
   const matchesWithBU = matches.map((job) => ({
@@ -55,19 +69,15 @@ export const run = async () => {
     business_unit: BUSINESS_UNITS[rand(BUSINESS_UNITS.length)],
   }));
   const matchesByBU: MatchesByBU = groupedByBU(matchesWithBU);
-  // TODO: Use buList to send to each BU slack channel.
-  // TODO: Send the sum of matches per stage to each channel,
-  // ie. as we won't be needing the individual candidate info.
   const buList = keys(matchesByBU);
-  const message: string = buList.reduce((acc: string, bu: Job.BusinessUnit) => {
+  const messagesByBU: MessagesByBU = {};
+  buList.forEach((bu) => {
     const matches = matchesByBU[bu];
-    if (!matches) {
-      return acc;
-    } else {
-      const formatted = matches.map(formatMatch).join("\n\n");
-      return acc + `*${bu.toUpperCase()}*\n` + formatted;
+    if (matches) {
+      messagesByBU[bu] = summedByStage(matches);
     }
-  }, "");
+  });
+  const message = JSON.stringify(messagesByBU);
   console.log(`${LOG_CTX} Found these BUs: ${Object.keys(matchesByBU)}`);
   await postToSlack(message);
 };
