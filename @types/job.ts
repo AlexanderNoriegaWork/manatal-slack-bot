@@ -41,6 +41,7 @@ declare namespace Job {
     jira_key: JIRAKey | null;
     business_unit: BusinessUnit | null;
   };
+  type MatchWithBU = Match & { business_unit: BusinessUnit };
   type Branded<T, B> = T & { __brand: B };
   type ValidStudio = Branded<Studio, "ValidStudio">;
   type ValidPosition = Branded<Position, "ValidPosition">;

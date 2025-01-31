@@ -22,9 +22,7 @@ const sqlConfig: sql.config = {
   },
 };
 
-export const getRecruitmentInfo = async (): Promise<
-  sql.IRecordSet<Job.Match>
-> => {
+export const getAllMatches = async (): Promise<sql.IRecordSet<Job.Match>> => {
   // throw new Error("NOT IMPLEMENTED");
   try {
     console.log(`${LOG_CTX} Try connecting to Azure SQL`);
